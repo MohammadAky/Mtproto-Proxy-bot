@@ -335,3 +335,42 @@ mtproto-proxy-bot/
 - **MTProto binary**: [`mtg`](https://github.com/9seconds/mtg) v2
 - **Process manager**: PM2 (Node.js)
 - **Proxy management**: systemd services per proxy
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Whether it's bug fixes, new features, or documentation improvements, your help is appreciated.
+
+### Quick Start
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Guidelines
+
+- Follow PEP 8 code style
+- Add type hints to functions
+- Write clear commit messages
+- Test your changes thoroughly
+- Update documentation as needed
+
+For detailed contributing instructions, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+You are free to:
+
+- ✅ Use commercially
+- ✅ Modify the code
+- ✅ Distribute it
+- ✅ Use privately
+
+Just include the license and copyright notice.
