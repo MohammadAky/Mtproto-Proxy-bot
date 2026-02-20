@@ -18,12 +18,16 @@ proxy_manager = ProxyManager()
 
 @admin_only
 async def create_proxy_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "🌐 <b>Step 1/3 — Domain (optional)</b>\n\n"
-        "Send me the <b>domain name</b> for fake-TLS (e.g. <code>cdn.example.com</code>)\n"
-        "Or send <code>-</code> to skip and use IP only.",
-        parse_mode="HTML",
-    )
+    text = ("🌐 <b>Step 1/3 — Domain (optional)</b>\n\n"
+            "Send me the <b>domain name</b> for fake-TLS (e.g. <code>cdn.example.com</code>)\n"
+            "Or send <code>-</code> to skip and use IP only.")
+    
+    # Handle both button clicks and command calls
+    if update.callback_query:
+        await update.callback_query.edit_message_text(text, parse_mode="HTML")
+    else:
+        await update.message.reply_text(text, parse_mode="HTML")
+    
     return ASK_DOMAIN
 
 
@@ -105,19 +109,24 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def list_proxies(update: Update, context: ContextTypes.DEFAULT_TYPE):
     proxies = proxy_manager.get_all_proxies()
     if not proxies:
-        await update.message.reply_text("📭 No proxies found.")
-        return
-
-    msg = "📋 <b>Active Proxies:</b>\n\n"
-    for p in proxies:
-        status = "🟢" if p.get("running") else "🔴"
-        msg += (
-            f"{status} <b>ID:</b> <code>{p['id']}</code>\n"
-            f"   🔌 Port: <code>{p['port']}</code>\n"
-            f"   🌐 Domain: <code>{p.get('domain') or 'IP only'}</code>\n"
-            f"   🔗 <a href=\"{p['link']}\">Open Link</a>\n\n"
-        )
-    await update.message.reply_text(msg, parse_mode="HTML", disable_web_page_preview=True)
+        text = "📭 No proxies found."
+    else:
+        msg = "📋 <b>Active Proxies:</b>\n\n"
+        for p in proxies:
+            status = "🟢" if p.get("running") else "🔴"
+            msg += (
+                f"{status} <b>ID:</b> <code>{p['id']}</code>\n"
+                f"   🔌 Port: <code>{p['port']}</code>\n"
+                f"   🌐 Domain: <code>{p.get('domain') or 'IP only'}</code>\n"
+                f"   🔗 <a href=\"{p['link']}\">Open Link</a>\n\n"
+            )
+        text = msg
+    
+    # Handle both button clicks and command calls
+    if update.callback_query:
+        await update.callback_query.edit_message_text(text, parse_mode="HTML", disable_web_page_preview=True)
+    else:
+        await update.message.reply_text(text, parse_mode="HTML", disable_web_page_preview=True)
 
 
 @admin_only

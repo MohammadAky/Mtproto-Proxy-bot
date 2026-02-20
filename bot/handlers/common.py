@@ -1,5 +1,5 @@
 from telegram import Update
-from telegram.ext import ContextTypes, CommandHandler, Application
+from telegram.ext import ContextTypes, CommandHandler, Application, CallbackQueryHandler
 from bot.utils.decorators import admin_only
 from bot.keyboards.inline import main_menu_keyboard
 
@@ -28,6 +28,26 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
+async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle button clicks"""
+    query = update.callback_query
+    await query.answer()
+    
+    callback_data = query.data
+    
+    # Route to appropriate handler based on button pressed
+    if callback_data == "create":
+        from bot.handlers.proxy import create_proxy_start
+        await create_proxy_start(update, context)
+    elif callback_data == "list":
+        from bot.handlers.proxy import list_proxies
+        await list_proxies(update, context)
+    elif callback_data == "status":
+        from bot.handlers.admin import status
+        await status(update, context)
+
+
 def register_common_handlers(app: Application):
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CallbackQueryHandler(button_callback, pattern="^(create|list|status)$"))

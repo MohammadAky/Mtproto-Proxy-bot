@@ -22,7 +22,12 @@ async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"🟢 Running: <code>{running}</code>\n"
         f"🔴 Stopped: <code>{len(proxies) - running}</code>"
     )
-    await update.message.reply_text(msg, parse_mode="HTML")
+    
+    # Handle both button clicks and command calls
+    if update.callback_query:
+        await update.callback_query.edit_message_text(msg, parse_mode="HTML")
+    else:
+        await update.message.reply_text(msg, parse_mode="HTML")
 
 
 @admin_only
