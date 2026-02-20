@@ -60,9 +60,7 @@ class ProxyManager:
     def _start_mtproto(self, port: int, secret: str, sponsor: Optional[str]) -> dict:
         """Start mtg (MTProto proxy) process via systemd service or direct."""
         try:
-            cmd = ["mtg", "simple-run", "-n", "0.0.0.0", str(port), secret]
-            if sponsor:
-                cmd += ["--ads-listen-addr", f"0.0.0.0:{port+1000}"]
+            cmd = ["mtg", "simple-run", f"0.0.0.0:{port}", secret]
 
             service_name = f"mtg-proxy-{port}"
             # Write a systemd service file
